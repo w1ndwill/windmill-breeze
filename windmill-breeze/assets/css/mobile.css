@@ -1,0 +1,149 @@
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+    /* 1. Layout & Grid */
+    .container {
+        padding: 20px 15px;
+        gap: 20px;
+        /* Ensure grid items stack */
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Force all cards to take full width */
+    .header-section,
+    .motto-card,
+    .clock-card,
+    .weather-card,
+    .blog-card,
+    .resume-card,
+    .portfolio-section,
+    .blog-post-card,
+    .card {
+        grid-column: span 12 !important;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* 2. Navbar Improvements */
+    .custom-navbar {
+        padding: 10px 15px;
+        height: auto;
+        min-height: 60px;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .nav-brand {
+        margin-right: auto;
+        font-size: 1.1rem;
+    }
+    
+    .windmill-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    .nav-items {
+        margin-left: 10px;
+    }
+
+    /* Make nav menu scrollable horizontally instead of hiding it */
+    .nav-menu {
+        display: flex !important;
+        width: 100%;
+        overflow-x: auto;
+        padding: 10px 5px;
+        gap: 10px;
+        border-top: 1px solid rgba(0,0,0,0.05);
+        margin-top: 10px;
+        -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+        white-space: nowrap;
+        scrollbar-width: none; /* Firefox */
+    }
+    
+    .nav-menu::-webkit-scrollbar {
+        display: none; /* Hide scrollbar */
+    }
+
+    .nav-menu li {
+        flex-shrink: 0;
+    }
+
+    .nav-menu a {
+        font-size: 0.9rem;
+        padding: 6px 16px;
+        background: var(--card-bg);
+        border-radius: 20px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        color: var(--text-main);
+        display: block;
+        transition: all 0.2s;
+    }
+
+    .nav-menu a.active {
+        background: var(--primary-color);
+        color: white;
+        box-shadow: 0 4px 10px rgba(127, 176, 105, 0.3);
+    }
+    
+    .nav-menu a::after {
+        display: none; /* Remove underline effect on mobile */
+    }
+
+    /* 3. Typography & Spacing */
+    .cursive-name {
+        font-size: 1.8rem;
+        margin-bottom: 5px;
+    }
+
+    .site-intro {
+        font-size: 0.95rem;
+        opacity: 0.8;
+    }
+
+    .motto-text {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+    
+    /* Card Visuals on Mobile */
+    .card {
+        border-radius: 16px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+    }
+
+    /* 4. Specific Card Adjustments */
+    .clock-card, .weather-card {
+        padding: 20px;
+        min-height: 150px;
+    }
+
+    .resume-section {
+        grid-template-columns: 1fr !important;
+        text-align: center;
+    }
+
+    .resume-text h2 {
+        border-left: none !important;
+        border-bottom: 3px solid var(--primary-color);
+        display: inline-block;
+        padding-bottom: 5px;
+    }
+
+    .resume-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* 5. Portfolio Grid */
+    .portfolio-grid,
+    .portfolio-grid-container {
+        grid-template-columns: 1fr !important;
+        display: grid;
+        gap: 20px;
+    }
+}
+

@@ -1,0 +1,1290 @@
+﻿/*
+Theme Name: Windmill Breeze
+Author: w1ndmiIl
+Description: A fresh and simple personal portfolio theme with weather effects.
+Version: 1.2
+Text Domain: windmill-breeze
+*/
+
+:root {
+    --bg-color: #dcece6;       /* Light Green-Grey Background */
+    --card-bg: #fcfcfc;        /* Off-white Card Background */
+    --primary-color: #7fb069;  /* Fresh Green */
+    --accent-color: #ff9f43;   /* Vibrant Orange */
+    --text-main: #2d3436;      /* Dark Grey Text */
+    --text-light: #636e72;     /* Light Grey Text */
+    --shadow: 0 10px 20px rgba(0,0,0,0.05);
+    --shadow-hover: 0 15px 30px rgba(0,0,0,0.1);
+    --toggle-bg: #2d3436;
+    --toggle-icon: #f1c40f;
+    --nav-height: 60px;
+}
+
+[data-theme="dark"] {
+    --bg-color: #121212;       /* Dark Background */
+    --card-bg: #1e1e1e;        /* Dark Card Background */
+    --primary-color: #8bc34a;  /* Lighter Green */
+    --accent-color: #ffb74d;   /* Lighter Orange */
+    --text-main: #e0e0e0;      /* Soft White Text */
+    --text-light: #a0a0a0;     /* Light Grey Text */
+    --shadow: 0 10px 20px rgba(0,0,0,0.4);
+    --shadow-hover: 0 15px 30px rgba(0,0,0,0.6);
+    --toggle-bg: #e0e0e0;
+    --toggle-icon: #2d3436;
+}
+
+body {
+    margin: 0;
+    font-family: 'Noto Sans SC', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.6;
+    transition: background-color 0.3s, color 0.3s;
+    padding-top: var(--nav-height); /* Space for fixed navbar */
+}
+
+/* --- Custom Navbar --- */
+.custom-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--nav-height);
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: background 0.3s;
+}
+
+/* WordPress Admin Bar Adaptation */
+body.admin-bar .custom-navbar {
+    top: 32px;
+}
+@media screen and (max-width: 782px) {
+    body.admin-bar .custom-navbar {
+        top: 46px;
+    }
+}
+
+[data-theme="dark"] .custom-navbar {
+    background: rgba(30, 30, 30, 0.8);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.nav-brand {
+    font-family: 'Meie Script', cursive;
+    font-size: 1.8rem;
+    color: var(--text-main);
+    text-decoration: none;
+    transition: transform 0.3s;
+    margin-right: 40px;
+}
+
+.nav-brand:hover {
+    transform: rotate(20deg) scale(1.1);
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 30px;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: var(--text-main);
+    font-weight: 500;
+    font-size: 1rem;
+    position: relative;
+    transition: color 0.3s;
+    opacity: 0.8;
+}
+
+.nav-menu a:hover, .nav-menu a.active {
+    color: var(--primary-color);
+    opacity: 1;
+}
+
+.nav-menu a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-color);
+    transition: width 0.3s ease;
+    border-radius: 2px;
+}
+
+.nav-menu a:hover::after, .nav-menu a.active::after {
+    width: 100%;
+}
+
+.nav-items {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+@media (max-width: 768px) {
+    .nav-menu { display: none; }
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    position: static;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    box-shadow: none;
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s;
+}
+
+.theme-toggle:hover {
+    transform: rotate(15deg) scale(1.1);
+    background: transparent;
+    color: var(--toggle-icon);
+}
+
+/* Avatar Styles */
+.avatar-container {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid var(--card-bg);
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease;
+}
+
+.avatar-container:hover {
+    transform: rotate(5deg) scale(1.05);
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* --- Weather Effects --- */
+.weather-effect-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+
+body.weather-sunny .weather-effect-layer::before {
+    content: '';
+    position: absolute;
+    top: -150px;
+    left: -150px;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(255, 200, 87, 0.4) 0%, rgba(255, 255, 255, 0) 70%);
+    filter: blur(80px);
+    animation: sun-breathe 6s infinite alternate;
+}
+
+@keyframes sun-breathe {
+    from { opacity: 0.6; transform: scale(1); }
+    to { opacity: 0.9; transform: scale(1.1); }
+}
+
+body.weather-rainy {
+    --bg-color: #cfd8dc;
+}
+
+[data-theme="dark"] body.weather-rainy {
+    --bg-color: #1a252f;
+}
+
+body.weather-rainy .card {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+[data-theme="dark"] body.weather-rainy .card {
+    background: rgba(45, 45, 45, 0.6);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.rain-drop {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.7);
+    width: 3px;
+    height: 30px;
+    top: -30px;
+    animation: rain-fall linear infinite;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="dark"] .rain-drop {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+@keyframes rain-fall {
+    0% { transform: translateY(-30px); }
+    100% { transform: translateY(120vh); }
+}
+
+body.weather-rainy .motto-card,
+body.weather-rainy .weather-card,
+body.weather-rainy .clock-card,
+body.weather-rainy .resume-card {
+    color: var(--text-main);
+}
+
+body.weather-rainy .analog-clock { border-color: var(--text-main); }
+body.weather-rainy .hour-hand { background: var(--text-main); }
+body.weather-rainy .center-dot { background: var(--text-main); }
+
+body.weather-rainy .tag {
+    background: rgba(0,0,0,0.08);
+    color: var(--text-main);
+}
+[data-theme="dark"] body.weather-rainy .tag {
+    background: rgba(255,255,255,0.15);
+    color: var(--text-main);
+}
+
+body.weather-rainy .btn-resume {
+    background: var(--text-main);
+    color: var(--card-bg);
+}
+
+/* Layout Container */
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 24px;
+    grid-auto-rows: minmax(100px, auto);
+}
+
+/* Card Styles */
+.card {
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    opacity: 0; 
+    animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.card:hover {
+    transform: translateY(-12px) scale(1.03);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+    z-index: 10;
+}
+
+/* Disable active scale effect for single post content to prevent "zoom in" feel */
+.single .card:active, .page .card:active {
+    transform: none !important;
+}
+
+.card:active {
+    transform: scale(0.96) !important;
+    transition: transform 0.1s cubic-bezier(0.05, 0.7, 0.1, 1);
+}
+
+/* --- Spotlight Effect --- */
+.card, .portfolio-item {
+    --mouse-x: 50%;
+    --mouse-y: 50%;
+}
+
+.card::after, .portfolio-item::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+        600px circle at var(--mouse-x) var(--mouse-y), 
+        rgba(255, 255, 255, 0.6),
+        transparent 40%
+    );
+    opacity: 0;
+    transition: opacity 0.5s;
+    pointer-events: none;
+    z-index: 2;
+    mix-blend-mode: overlay;
+}
+
+.card:hover::after, .portfolio-item:hover::after {
+    opacity: 1;
+}
+
+[data-theme="dark"] .card::after, 
+[data-theme="dark"] .portfolio-item::after {
+    background: radial-gradient(
+        600px circle at var(--mouse-x) var(--mouse-y), 
+        rgba(255, 255, 255, 0.15),
+        transparent 40%
+    );
+    mix-blend-mode: normal;
+}
+
+/* --- 1. Header Section --- */
+.header-section {
+    grid-column: span 12;
+    text-align: center;
+    padding: 40px 0;
+    animation: fadeInDown 1s ease forwards;
+}
+
+.cursive-name {
+    font-family: 'Meie Script', cursive;
+    font-size: 3.5rem;
+    margin: 0;
+    color: var(--text-main);
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
+}
+
+.site-intro {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    margin-top: 10px;
+    font-weight: 300;
+}
+
+/* --- 2. Motto Card --- */
+.motto-card {
+    grid-column: span 4;
+    background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+    color: #fff;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.motto-text {
+    font-size: 1.3rem;
+    font-weight: bold;
+    font-family: 'Meie Script', cursive;
+}
+
+/* --- 2.5 Clock Card --- */
+.clock-card {
+    grid-column: span 4;
+    background: #2d3436;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.analog-clock {
+    width: 100px;
+    height: 100px;
+    border: 3px solid white;
+    border-radius: 50%;
+    position: relative;
+}
+
+.hand {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform-origin: bottom center;
+    background: white;
+    border-radius: 4px;
+    transform: translateX(-50%);
+}
+
+.hour-hand { width: 4px; height: 25px; background: white; }
+.minute-hand { width: 3px; height: 35px; background: #dfe6e9; }
+.second-hand { width: 2px; height: 40px; background: #ff7675; }
+.center-dot {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* --- 3. Weather Card --- */
+.weather-card {
+    grid-column: span 4;
+    background: linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%);
+    color: white;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.time-display {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.date-display {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.weather-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    margin-top: 10px;
+}
+
+/* --- 4. Blog Card --- */
+.blog-card {
+    grid-column: span 6;
+    border-left: 5px solid var(--primary-color);
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.blog-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.blog-list li {
+    margin-bottom: 12px;
+    border-bottom: 1px dashed #eee;
+    padding-bottom: 8px;
+}
+
+.blog-list a {
+    text-decoration: none;
+    color: var(--text-main);
+    transition: all 0.2s;
+    display: block;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.blog-list a:hover {
+    color: var(--primary-color);
+    background-color: rgba(127, 176, 105, 0.1);
+    padding-left: 12px;
+}
+
+/* --- 5. Resume Card --- */
+.resume-card {
+    grid-column: span 6;
+    background-color: #2d3436;
+    color: white;
+}
+
+.resume-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.tag {
+    background: rgba(255,255,255,0.2);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+}
+
+.btn-resume {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: white;
+    color: #2d3436;
+    text-decoration: none;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    transition: transform 0.2s;
+}
+
+.btn-resume:hover {
+    transform: scale(1.02);
+}
+
+/* --- 6. Portfolio Section --- */
+.portfolio-section {
+    grid-column: span 12;
+    margin-top: 20px;
+}
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.portfolio-item {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #eee;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.portfolio-item:hover {
+    border-color: var(--accent-color);
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(255, 159, 67, 0.3);
+}
+
+.portfolio-item:hover .portfolio-icon {
+    transform: scale(1.2) rotate(15deg);
+}
+
+.portfolio-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    display: block;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@media (max-width: 768px) {
+    .container { grid-template-columns: 1fr; }
+    .motto-card, .clock-card, .weather-card, .blog-card, .resume-card, .header-section, .portfolio-section { grid-column: span 1; }
+    .cursive-name { font-size: 3.5rem; }
+}
+
+.motto-card { animation-delay: 0.1s; }
+.clock-card { animation-delay: 0.2s; }
+.weather-card { animation-delay: 0.3s; }
+.blog-card { animation-delay: 0.4s; }
+.resume-card { animation-delay: 0.5s; }
+.portfolio-section { 
+    grid-column: span 12;
+    margin-top: 20px;
+    opacity: 0;
+    animation: fadeInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-delay: 0.6s;
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Social Links --- */
+.social-links {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.social-link {
+    text-decoration: none;
+    color: var(--text-light);
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: rgba(0,0,0,0.03);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid transparent;
+}
+
+.social-link:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-color: transparent;
+}
+
+[data-theme="dark"] .social-link {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-main);
+}
+
+[data-theme="dark"] .social-link:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* --- Login Modal --- */
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.login-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.login-card {
+    background: var(--card-bg);
+    padding: 40px;
+    border-radius: 24px;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.login-overlay.active .login-card {
+    transform: translateY(0);
+}
+
+.login-title {
+    font-family: 'Meie Script', cursive;
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+.login-form input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 2px solid #eee;
+    border-radius: 12px;
+    box-sizing: border-box;
+    font-family: inherit;
+    transition: border-color 0.3s;
+}
+
+.login-form input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.login-btn:hover {
+    transform: scale(1.02);
+    background: #6da058;
+}
+
+.guest-btn {
+    background: transparent;
+    color: var(--text-light);
+    margin-top: 15px;
+    font-size: 0.9rem;
+    text-decoration: underline;
+    cursor: pointer;
+    border: none;
+}
+
+.form-toggle-text {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.form-toggle-link {
+    color: var(--primary-color);
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.hidden {
+    display: none;
+}
+
+/* --- Profile Modal Styles --- */
+.profile-avatar-upload {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    border: 3px solid var(--primary-color);
+}
+
+.profile-avatar-upload img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-overlay-icon {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.4);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 1.5rem;
+}
+
+.profile-avatar-upload:hover .avatar-overlay-icon {
+    opacity: 1;
+}
+
+#profile-avatar-input {
+    display: none;
+}
+
+/* --- Blog Page Styles --- */
+.blog-post-card {
+    grid-column: span 6;
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 768px) {
+    .blog-post-card {
+        grid-column: span 12;
+    }
+}
+
+/* Pagination Styles */
+.pagination-container .pagination {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.pagination .page-numbers {
+    display: inline-block;
+    padding: 8px 16px;
+    margin: 0 4px;
+    border-radius: 20px;
+    background: var(--card-bg);
+    color: var(--text-main);
+    text-decoration: none;
+    box-shadow: var(--shadow);
+    transition: all 0.3s;
+    font-weight: bold;
+}
+
+.pagination .page-numbers.current,
+.pagination .page-numbers:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+
+/* --- Cloudy Weather Effects --- */
+body.weather-cloudy {
+    --bg-color: #ecf0f1; /* Soft Grey-Blue */
+}
+
+[data-theme='dark'] body.weather-cloudy {
+    --bg-color: #34495e;
+}
+
+body.weather-cloudy .weather-effect-layer::before,
+body.weather-cloudy .weather-effect-layer::after {
+    content: '';
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    box-shadow: 
+        40px 10px 0 10px #fff,
+        -30px 10px 0 10px #fff,
+        0 0 20px rgba(0,0,0,0.05);
+    opacity: 0.6;
+    filter: blur(5px);
+    z-index: -1;
+}
+
+body.weather-cloudy .weather-effect-layer::before {
+    top: 15%;
+    left: -200px;
+    animation: cloud-float 40s linear infinite;
+    transform: scale(1.5);
+}
+
+body.weather-cloudy .weather-effect-layer::after {
+    top: 40%;
+    left: -300px;
+    animation: cloud-float 55s linear infinite reverse; /* Reverse direction or just slower? Let's just do slower forward */
+    animation-name: cloud-float;
+    animation-duration: 60s;
+    animation-delay: -20s;
+    transform: scale(1);
+    opacity: 0.4;
+}
+
+@keyframes cloud-float {
+    0% { left: -300px; }
+    100% { left: 110%; }
+}
+
+
+/* --- Portfolio Styles --- */
+.portfolio-grid-container {
+    grid-column: span 12;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.portfolio-card {
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.portfolio-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.portfolio-thumbnail-link {
+    display: block;
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+}
+
+.portfolio-thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.portfolio-card:hover .portfolio-thumbnail {
+    transform: scale(1.1);
+}
+
+.portfolio-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #f3f4f6, #e5e7eb);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+}
+
+.portfolio-content {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.portfolio-content .entry-title {
+    font-size: 1.3rem;
+    margin: 0 0 10px;
+}
+
+.portfolio-content .entry-title a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.portfolio-content .entry-summary {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-bottom: 15px;
+    flex-grow: 1;
+}
+
+.btn-view-project {
+    display: inline-block;
+    padding: 8px 20px;
+    background: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    align-self: flex-start;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn-view-project:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    background-color: var(--accent-color);
+}
+
+.portfolio-empty {
+    grid-column: span 12;
+    text-align: center;
+    padding: 60px;
+}
+
+.portfolio-empty-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+
+/* --- Windmill Theme Elements --- */
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text-main);
+}
+
+.brand-text {
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+}
+
+.windmill-icon {
+    color: var(--primary-color);
+    animation: spin 10s linear infinite;
+}
+
+.windmill-icon:hover {
+    animation: spin 2s linear infinite;
+}
+
+.blade-1 { opacity: 0.8; }
+.blade-2 { opacity: 0.6; }
+.blade-3 { opacity: 0.8; }
+.blade-4 { opacity: 0.6; }
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+
+/* --- Windmill Animation States --- */
+.windmill-icon.spin-slow {
+    animation: spin 12s linear infinite;
+}
+
+.windmill-icon.spin-medium {
+    animation: spin 6s linear infinite;
+}
+
+.windmill-icon.spin-fast {
+    animation: spin 2s linear infinite;
+}
+
+.windmill-icon.spin-turbo {
+    animation: spin 0.5s linear infinite !important;
+}
+
+.windmill-icon.paused {
+    animation-play-state: paused;
+}
+
+
+/* --- Resume Preview Button --- */
+.btn-preview {
+    background-color: var(--card-bg);
+    color: var(--text-main);
+    border: 1px solid var(--text-light);
+}
+
+.btn-preview:hover {
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+
+/* --- Background Dutch Windmill --- */
+.bg-windmill-container {
+    position: fixed;
+    bottom: 0;
+    right: 0; /* Move to the very edge */
+    width: 200px;
+    height: 300px;
+    z-index: 999; /* Bring to front to avoid being blocked */
+    opacity: 1;
+    pointer-events: none; /* Let clicks pass through */
+}
+
+/* Tower */
+.windmill-tower {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 160px;
+}
+
+.tower-body {
+    width: 0;
+    height: 0;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-bottom: 160px solid #8d6e63; /* Brownish tower */
+    position: absolute;
+    bottom: 0;
+    left: 25px;
+}
+
+.tower-top {
+    width: 60px;
+    height: 40px;
+    background: #5d4037;
+    border-radius: 30px 30px 5px 5px;
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    z-index: 2;
+}
+
+.tower-door {
+    width: 20px;
+    height: 30px;
+    background: #3e2723;
+    border-radius: 10px 10px 0 0;
+    position: absolute;
+    bottom: 0;
+    left: 40px;
+}
+
+.tower-window {
+    width: 14px;
+    height: 14px;
+    background: #efebe9;
+    position: absolute;
+    top: 60px;
+    left: 43px;
+    border: 2px solid #3e2723;
+}
+
+/* Blades */
+.windmill-blades-container {
+    position: absolute;
+    top: 30px; /* Align with tower top */
+    left: 50%;
+    width: 240px;
+    height: 240px;
+    margin-left: -120px; /* Center horizontally */
+    z-index: 20; /* Higher than info label */
+    transform-origin: center center;
+    /* Animation will be applied by JS classes */
+}
+
+.blade {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 12px;
+    background: #fff;
+    border: 2px solid #5d4037;
+    transform-origin: 0% 50%; /* Pivot from center */
+}
+
+/* Create the lattice look for blades */
+.blade::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 10px;
+    width: 80px;
+    height: 4px;
+    background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 5px,
+        #5d4037 5px,
+        #5d4037 6px
+    );
+}
+
+.blade.b1 { transform: rotate(0deg); }
+.blade.b2 { transform: rotate(90deg); }
+.blade.b3 { transform: rotate(180deg); }
+.blade.b4 { transform: rotate(270deg); }
+
+.blade-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    background: #3e2723;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 4;
+}
+
+/* Animation Classes for Background Windmill */
+.windmill-blades-container.spin-slow {
+    animation: spin 12s linear infinite;
+}
+
+.windmill-blades-container.spin-medium {
+    animation: spin 6s linear infinite;
+}
+
+.windmill-blades-container.spin-fast {
+    animation: spin 2s linear infinite;
+}
+
+.windmill-blades-container.spin-turbo {
+    animation: spin 0.5s linear infinite !important;
+}
+
+/* Mobile Adjustment */
+@media (max-width: 768px) {
+    .bg-windmill-container {
+        right: -30px;
+        bottom: -20px;
+        transform: scale(0.6);
+        transform-origin: bottom right;
+        opacity: 0.8;
+    }
+}
+
+
+/* --- Windmill Info Label --- */
+.windmill-info {
+    position: absolute;
+    bottom: 20px; /* Position at bottom */
+    top: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    background: rgba(255, 255, 255, 0.5); /* Semi-transparent */
+    backdrop-filter: blur(3px);
+    padding: 5px 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    
+    font-size: 0.85rem;
+    color: var(--text-main);
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.3);
+    transition: opacity 0.3s;
+    pointer-events: auto;
+    z-index: 10; /* Lower than blades (20) */
+    white-space: nowrap;
+}
+
+.windmill-info .wind-speed {
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.windmill-info .wind-dir {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+/* Mobile adjustment */
+@media (max-width: 768px) {
+    .windmill-info {
+        left: 50%;
+        top: auto;
+        bottom: 10px;
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        background: rgba(255, 255, 255, 0.6);
+    }
+}
+
