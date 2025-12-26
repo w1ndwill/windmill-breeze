@@ -1,13 +1,10 @@
-<?php 
-get_header(); 
-?>
+<?php get_header(); ?>
 
 <div class="container">
     
-    <!-- Blog Header -->
-    <div class="header-section" style="padding: 20px 0;">
-        <h1 class="cursive-name" style="font-size: 2.5rem;">博客文章</h1>
-        <p class="site-intro">��������������</p>
+    <div class="header-section" style="grid-column: span 12; padding: 20px 0;">
+        <h1 class="cursive-name" style="font-size: 2.5rem;"><?php the_archive_title(); ?></h1>
+        <div class="site-intro"><?php the_archive_description(); ?></div>
     </div>
 
     <?php if ( have_posts() ) : ?>
@@ -28,8 +25,6 @@ get_header();
                     
                     <div class="entry-meta" style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 15px;">
                         <span class="posted-on"> <?php echo get_the_date(); ?></span>
-                        <span class="byline">  <?php the_author(); ?></span>
-                        <span class="cat-links">  <?php the_category( ', ' ); ?></span>
                     </div>
                 </header>
 
@@ -38,31 +33,28 @@ get_header();
                 </div>
 
                 <div class="entry-footer" style="margin-top: auto; padding-top: 15px;">
-                    <a href="<?php the_permalink(); ?>" class="read-more-btn" style="color: var(--primary-color); font-weight: bold; text-decoration: none;">阅读全文 &rarr;</a>
+                    <a href="<?php the_permalink(); ?>" class="read-more-btn" style="color: var(--primary-color); font-weight: bold; text-decoration: none;">Read More &rarr;</a>
                 </div>
 
             </article>
 
         <?php endwhile; ?>
 
-        <!-- Pagination -->
         <div class="pagination-container" style="grid-column: span 12; display: flex; justify-content: center; margin-top: 20px;">
             <?php
             the_posts_pagination( array(
                 'mid_size'  => 2,
-                'prev_text' => __( '&larr; Previous', 'textdomain' ),
-                'next_text' => __( 'Next &rarr;', 'textdomain' ),
+                'prev_text' => __( '&larr; Previous', 'windmill-breeze' ),
+                'next_text' => __( 'Next &rarr;', 'windmill-breeze' ),
             ) );
             ?>
         </div>
 
     <?php else : ?>
-
-        <div class="card" style="grid-column: span 12; text-align: center; padding: 40px;">
-            <h2>��������</h2>
-            <p>���ﻹû�з����κ����ݡ�</p>
+        <div class="card" style="grid-column: span 12; padding: 40px; text-align: center;">
+            <h2>Nothing Found</h2>
+            <p>It seems we can&rsquo;t find what you&rsquo;re looking for.</p>
         </div>
-
     <?php endif; ?>
 
 </div>

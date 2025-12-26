@@ -47,8 +47,8 @@ get_header();
             <?php
             the_posts_pagination( array(
                 'mid_size'  => 2,
-                'prev_text' => __( '&larr; 上一页', 'textdomain' ),
-                'next_text' => __( '下一页 &rarr;', 'textdomain' ),
+                'prev_text' => __( '&larr; Previous', 'textdomain' ),
+                'next_text' => __( 'Next &rarr;', 'textdomain' ),
             ) );
             ?>
         </div>

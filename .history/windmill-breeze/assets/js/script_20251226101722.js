@@ -11,9 +11,8 @@
     const toLoginLink = document.getElementById('to-login');
 
     // Check Guest Mode (localStorage)
-    // Note: We now use Cookies for PHP handling, but we keep this for legacy or double-check
     const userStatus = localStorage.getItem('user_status');
-    if (userStatus === 'guest' && loginOverlay && loginOverlay.classList.contains('active')) {
+    if (userStatus === 'guest' && loginOverlay) {
         loginOverlay.classList.remove('active');
     }
 
@@ -36,8 +35,6 @@
     const handleGuest = () => {
         if(loginOverlay) loginOverlay.classList.remove('active');
         localStorage.setItem('user_status', 'guest');
-        // Set cookie for PHP to read (expires in 30 days)
-        document.cookie = "windmill_guest_mode=1; max-age=2592000; path=/";
     };
     if(guestBtn) guestBtn.addEventListener('click', handleGuest);
     if(guestBtnReg) guestBtnReg.addEventListener('click', handleGuest);
@@ -59,7 +56,6 @@
                 if(data.success) {
                     // Login Success
                     localStorage.removeItem('user_status'); // Clear guest status
-                    document.cookie = "windmill_guest_mode=; max-age=0; path=/"; // Clear cookie
                     location.reload(); // Reload to let PHP handle the logged-in state
                 } else {
                     alert(data.data.message || '登录失败');
@@ -89,7 +85,6 @@
                 if(data.success) {
                     // Register Success (Auto Logged In)
                     localStorage.removeItem('user_status');
-                    document.cookie = "windmill_guest_mode=; max-age=0; path=/"; // Clear cookie
                     alert('注册成功！正在跳转...');
                     location.reload();
                 } else {

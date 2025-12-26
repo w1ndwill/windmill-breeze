@@ -38,7 +38,7 @@ get_header();
                 </div>
 
                 <div class="entry-footer" style="margin-top: auto; padding-top: 15px;">
-                    <a href="<?php the_permalink(); ?>" class="read-more-btn" style="color: var(--primary-color); font-weight: bold; text-decoration: none;">阅读全文 &rarr;</a>
+                    <a href="<?php the_permalink(); ?>" class="read-more-btn" style="color: var(--primary-color); font-weight: bold; text-decoration: none;">�Ķ�ȫ�� &rarr;</a>
                 </div>
 
             </article>

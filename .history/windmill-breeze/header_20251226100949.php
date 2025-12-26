@@ -7,46 +7,9 @@
 </head>
 <body <?php body_class(); ?>>
 
-    <?php 
-    // Check if user is logged in OR if they have set the guest mode cookie
-    $is_guest_mode = isset($_COOKIE['windmill_guest_mode']);
-    if (!is_user_logged_in() && !$is_guest_mode) : 
-    ?>
+    <?php if (!is_user_logged_in()) : ?>
     <!-- 登录/注册 弹窗 -->
     <div class="login-overlay active" id="login-overlay">
-        <div class="login-card">
-            <div class="login-title">Welcome</div>
-            <p style="color: var(--text-light); margin-bottom: 20px;">请登录以继续访问</p>
-            
-            <!-- 登录表单 -->
-            <form class="login-form" id="login-form">
-                <input type="text" name="username" placeholder="用户名" required>
-                <input type="password" name="password" placeholder="密码" required>
-                <button type="submit" class="login-btn">登录</button>
-                <div class="form-toggle-text">
-                    还没有账号？ <span class="form-toggle-link" id="to-register">去注册</span>
-                </div>
-                <button type="button" class="guest-btn" id="guest-btn">我是访客，随便看看</button>
-            </form>
-
-            <!-- 注册表单 (默认隐藏) -->
-            <form class="login-form hidden" id="register-form">
-                <input type="text" name="username" placeholder="设置用户名" required>
-                <input type="email" name="email" placeholder="电子邮箱" required>
-                <input type="password" name="password" placeholder="设置密码" required>
-                <button type="submit" class="login-btn">注册</button>
-                <div class="form-toggle-text">
-                    已有账号？ <span class="form-toggle-link" id="to-login">去登录</span>
-                </div>
-                <button type="button" class="guest-btn" id="guest-btn-reg">我是访客，随便看看</button>
-            </form>
-        </div>
-    </div>
-    <?php endif; ?>
-
-    <!-- Login Overlay Structure (Hidden by default if guest mode is active, but available for JS to toggle) -->
-    <?php if (!is_user_logged_in() && $is_guest_mode) : ?>
-    <div class="login-overlay" id="login-overlay">
         <div class="login-card">
             <div class="login-title">Welcome</div>
             <p style="color: var(--text-light); margin-bottom: 20px;">请登录以继续访问</p>
@@ -121,28 +84,24 @@
     <nav class="custom-navbar">
         <div class="nav-left">
             <a href="<?php echo home_url(); ?>" class="nav-brand">🌸</a>
-            <ul class="nav-menu">
-                <li><a href="<?php echo home_url(); ?>" class="<?php echo is_front_page() ? 'active' : ''; ?>">首页</a></li>
-                <?php 
-                // Get the Blog Page URL dynamically
-                $blog_page = get_pages(array(
-                    'meta_key' => '_wp_page_template',
-                    'meta_value' => 'page-blog.php'
-                ));
-                $blog_url = (!empty($blog_page)) ? get_permalink($blog_page[0]->ID) : home_url('/blog');
+            <?php 
+            if ( has_nav_menu( 'primary' ) ) {
+                wp_nav_menu( array(
+                    'theme_location' => 'primary',
+                    'container'      => false,
+                    'menu_class'     => 'nav-menu',
+                    'fallback_cb'    => false,
+                ) );
+            } else {
+                // Fallback if no menu is assigned
                 ?>
-                <li><a href="<?php echo esc_url($blog_url); ?>" class="<?php echo (!is_front_page() && (is_page_template('page-blog.php') || (is_single() && get_post_type() == 'post'))) ? 'active' : ''; ?>">文章</a></li>
-                <li><a href="<?php echo get_post_type_archive_link('portfolio'); ?>" class="<?php echo (is_post_type_archive('portfolio') || (is_single() && get_post_type() == 'portfolio')) ? 'active' : ''; ?>">作品</a></li>
-                <?php 
-                // Get the About Page URL dynamically
-                $about_page = get_pages(array(
-                    'meta_key' => '_wp_page_template',
-                    'meta_value' => 'page-about.php'
-                ));
-                $about_url = (!empty($about_page)) ? get_permalink($about_page[0]->ID) : '#';
-                ?>
-                <li><a href="<?php echo $about_url; ?>" class="<?php echo is_page_template('page-about.php') ? 'active' : ''; ?>">关于</a></li>
-            </ul>
+                <ul class="nav-menu">
+                    <li><a href="<?php echo home_url(); ?>">Home</a></li>
+                    <li><a href="<?php echo admin_url('nav-menus.php'); ?>">Assign Menu</a></li>
+                </ul>
+                <?php
+            }
+            ?>
         </div>
         <div class="nav-items" style="display: flex; align-items: center; gap: 15px;">
             
@@ -195,6 +154,6 @@
         <button id="search-close" class="search-close">&times;</button>
         <div class="search-container">
             <?php get_search_form(); ?>
-            <p style="margin-top: 20px; color: #fff; opacity: 0.8;">输入关键词并按回车搜索</p>
+            <p style="margin-top: 20px; color: #fff; opacity: 0.8;">Type and press Enter to search</p>
         </div>
     </div>

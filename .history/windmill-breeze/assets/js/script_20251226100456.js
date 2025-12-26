@@ -1,4 +1,4 @@
-﻿document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     console.log('Windmill Breeze Script Loaded');
 
     // --- Login/Register Logic ---
@@ -11,9 +11,9 @@
     const toLoginLink = document.getElementById('to-login');
 
     // Check Guest Mode (localStorage)
-    // Note: We now use Cookies for PHP handling, but we keep this for legacy or double-check
+    // Note: If user is logged in to WP, PHP won't render the overlay, so this check is for non-logged-in users who chose "Guest" before.
     const userStatus = localStorage.getItem('user_status');
-    if (userStatus === 'guest' && loginOverlay && loginOverlay.classList.contains('active')) {
+    if (userStatus === 'guest' && loginOverlay) {
         loginOverlay.classList.remove('active');
     }
 
@@ -36,8 +36,6 @@
     const handleGuest = () => {
         if(loginOverlay) loginOverlay.classList.remove('active');
         localStorage.setItem('user_status', 'guest');
-        // Set cookie for PHP to read (expires in 30 days)
-        document.cookie = "windmill_guest_mode=1; max-age=2592000; path=/";
     };
     if(guestBtn) guestBtn.addEventListener('click', handleGuest);
     if(guestBtnReg) guestBtnReg.addEventListener('click', handleGuest);
@@ -59,7 +57,6 @@
                 if(data.success) {
                     // Login Success
                     localStorage.removeItem('user_status'); // Clear guest status
-                    document.cookie = "windmill_guest_mode=; max-age=0; path=/"; // Clear cookie
                     location.reload(); // Reload to let PHP handle the logged-in state
                 } else {
                     alert(data.data.message || '登录失败');
@@ -89,7 +86,6 @@
                 if(data.success) {
                     // Register Success (Auto Logged In)
                     localStorage.removeItem('user_status');
-                    document.cookie = "windmill_guest_mode=; max-age=0; path=/"; // Clear cookie
                     alert('注册成功！正在跳转...');
                     location.reload();
                 } else {
@@ -383,7 +379,7 @@
         }
     }
 
-    // 点击天气卡片切换模拟效果 (已禁用)
+    // 点击天气卡片切换模拟效果
     /*
     if(weatherCard) {
         weatherCard.addEventListener('click', () => {
@@ -494,84 +490,4 @@
             }
         });
     }
-
-    // --- Dropdown Menu Logic ---
-    const navLoginBtnDropdown = document.getElementById('nav-login-btn-dropdown');
-    const navRegisterBtnDropdown = document.getElementById('nav-register-btn-dropdown');
-    const navProfileLinkDropdown = document.getElementById('nav-profile-link-dropdown');
-
-    if (navLoginBtnDropdown) {
-        navLoginBtnDropdown.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (loginOverlay) {
-                loginOverlay.classList.add('active');
-                if(loginForm) loginForm.classList.remove('hidden');
-                if(registerForm) registerForm.classList.add('hidden');
-            }
-        });
-    }
-
-    if (navRegisterBtnDropdown) {
-        navRegisterBtnDropdown.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (loginOverlay) {
-                loginOverlay.classList.add('active');
-                if(loginForm) loginForm.classList.add('hidden');
-                if(registerForm) registerForm.classList.remove('hidden');
-            }
-        });
-    }
-
-    if (navProfileLinkDropdown) {
-        navProfileLinkDropdown.addEventListener('click', (e) => {
-            e.preventDefault();
-            if(profileOverlay) {
-                profileOverlay.classList.add('active');
-                const formData = new FormData();
-                formData.append('action', 'windmill_get_profile');
-                formData.append('nonce', windmill_vars.nonce);
-
-                fetch(windmill_vars.ajax_url, { method: 'POST', body: formData })
-                .then(res => res.json())
-                .then(data => {
-                    if(data.success) {
-                        const user = data.data;
-                        document.getElementById('profile-name').value = user.display_name;
-                        document.getElementById('profile-email').value = user.email;
-                        document.getElementById('profile-url').value = user.url || '';
-                        document.getElementById('profile-hobbies').value = user.hobbies || '';
-                        document.getElementById('profile-friend-links').value = user.friend_links || '';
-                        document.getElementById('profile-desc').value = user.description;
-                        if(avatarPreview) avatarPreview.src = user.avatar;
-                    }
-                });
-            }
-        });
-    }
-
-    // --- Search Overlay Logic ---
-    const searchToggle = document.getElementById('search-toggle');
-    const searchOverlay = document.getElementById('search-overlay');
-    const searchClose = document.getElementById('search-close');
-    const searchField = document.querySelector('.search-overlay .search-field');
-
-    if (searchToggle && searchOverlay) {
-        searchToggle.addEventListener('click', () => {
-            searchOverlay.classList.add('active');
-            if (searchField) setTimeout(() => searchField.focus(), 100);
-        });
-    }
-
-    if (searchClose && searchOverlay) {
-        searchClose.addEventListener('click', () => {
-            searchOverlay.classList.remove('active');
-        });
-    }
-
-    // Close on Esc key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && searchOverlay && searchOverlay.classList.contains('active')) {
-            searchOverlay.classList.remove('active');
-        }
-    });
 });

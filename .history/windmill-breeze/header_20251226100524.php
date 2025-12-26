@@ -7,46 +7,9 @@
 </head>
 <body <?php body_class(); ?>>
 
-    <?php 
-    // Check if user is logged in OR if they have set the guest mode cookie
-    $is_guest_mode = isset($_COOKIE['windmill_guest_mode']);
-    if (!is_user_logged_in() && !$is_guest_mode) : 
-    ?>
+    <?php if (!is_user_logged_in()) : ?>
     <!-- 登录/注册 弹窗 -->
     <div class="login-overlay active" id="login-overlay">
-        <div class="login-card">
-            <div class="login-title">Welcome</div>
-            <p style="color: var(--text-light); margin-bottom: 20px;">请登录以继续访问</p>
-            
-            <!-- 登录表单 -->
-            <form class="login-form" id="login-form">
-                <input type="text" name="username" placeholder="用户名" required>
-                <input type="password" name="password" placeholder="密码" required>
-                <button type="submit" class="login-btn">登录</button>
-                <div class="form-toggle-text">
-                    还没有账号？ <span class="form-toggle-link" id="to-register">去注册</span>
-                </div>
-                <button type="button" class="guest-btn" id="guest-btn">我是访客，随便看看</button>
-            </form>
-
-            <!-- 注册表单 (默认隐藏) -->
-            <form class="login-form hidden" id="register-form">
-                <input type="text" name="username" placeholder="设置用户名" required>
-                <input type="email" name="email" placeholder="电子邮箱" required>
-                <input type="password" name="password" placeholder="设置密码" required>
-                <button type="submit" class="login-btn">注册</button>
-                <div class="form-toggle-text">
-                    已有账号？ <span class="form-toggle-link" id="to-login">去登录</span>
-                </div>
-                <button type="button" class="guest-btn" id="guest-btn-reg">我是访客，随便看看</button>
-            </form>
-        </div>
-    </div>
-    <?php endif; ?>
-
-    <!-- Login Overlay Structure (Hidden by default if guest mode is active, but available for JS to toggle) -->
-    <?php if (!is_user_logged_in() && $is_guest_mode) : ?>
-    <div class="login-overlay" id="login-overlay">
         <div class="login-card">
             <div class="login-title">Welcome</div>
             <p style="color: var(--text-light); margin-bottom: 20px;">请登录以继续访问</p>
@@ -146,9 +109,6 @@
         </div>
         <div class="nav-items" style="display: flex; align-items: center; gap: 15px;">
             
-            <!-- Search Toggle -->
-            <button id="search-toggle" class="theme-toggle" aria-label="Search">🔍</button>
-
             <!-- User Avatar Dropdown -->
             <div class="user-menu-container">
                 <?php if (is_user_logged_in()) : 
@@ -189,12 +149,3 @@
 
     <!-- 天气特效层 -->
     <div class="weather-effect-layer" id="weather-layer"></div>
-
-    <!-- Search Overlay -->
-    <div id="search-overlay" class="search-overlay">
-        <button id="search-close" class="search-close">&times;</button>
-        <div class="search-container">
-            <?php get_search_form(); ?>
-            <p style="margin-top: 20px; color: #fff; opacity: 0.8;">输入关键词并按回车搜索</p>
-        </div>
-    </div>

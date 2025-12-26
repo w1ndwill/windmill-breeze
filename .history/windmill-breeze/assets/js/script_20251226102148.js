@@ -11,9 +11,8 @@
     const toLoginLink = document.getElementById('to-login');
 
     // Check Guest Mode (localStorage)
-    // Note: We now use Cookies for PHP handling, but we keep this for legacy or double-check
     const userStatus = localStorage.getItem('user_status');
-    if (userStatus === 'guest' && loginOverlay && loginOverlay.classList.contains('active')) {
+    if (userStatus === 'guest' && loginOverlay) {
         loginOverlay.classList.remove('active');
     }
 
