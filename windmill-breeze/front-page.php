@@ -134,10 +134,15 @@ $display_name = $user_info ? $user_info->display_name : get_bloginfo('name');
                     <?php echo get_theme_mod('resume_intro', '拥有5年开发经验的前端工程师，热衷于创造优雅的用户体验。'); ?>
                 </p>
                 <div class="tag-container">
-                    <span class="tag">JavaScript</span>
-                    <span class="tag">React</span>
-                    <span class="tag">Node.js</span>
-                    <span class="tag">UI Design</span>
+                    <?php 
+                    $tags_str = get_theme_mod('resume_tags', 'JavaScript, React, Node.js, UI Design');
+                    $tags = array_map('trim', explode(',', $tags_str));
+                    foreach ($tags as $tag) {
+                        if (!empty($tag)) {
+                            echo '<span class="tag">' . esc_html($tag) . '</span>';
+                        }
+                    }
+                    ?>
                 </div>
             </div>
             <div class="resume-actions" style="display: flex; gap: 10px; margin-top: 15px;">

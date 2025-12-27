@@ -235,6 +235,18 @@ function my_custom_theme_customize_register($wp_customize) {
         'type' => 'textarea',
     ));
 
+    $wp_customize->add_setting('resume_tags', array(
+        'default' => 'JavaScript, React, Node.js, UI Design',
+        'transport' => 'refresh',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('resume_tags', array(
+        'label' => __('技能标签 (用逗号分隔)', 'my-custom-theme'),
+        'section' => 'resume_section',
+        'type' => 'text',
+    ));
+
     $wp_customize->add_setting('resume_file_url', array(
         'default' => '#',
         'transport' => 'refresh',
