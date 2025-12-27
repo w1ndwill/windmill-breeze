@@ -40,6 +40,9 @@ function my_custom_theme_scripts() {
     // Enqueue Mobile CSS
     wp_enqueue_style('mobile-style', get_template_directory_uri() . '/assets/css/mobile.css', array(), $style_ver);
 
+    // Enqueue Hero CSS
+    wp_enqueue_style('hero-style', get_template_directory_uri() . '/assets/css/hero.css', array(), $style_ver);
+
     // Enqueue Scripts
     $script_ver = filemtime(get_template_directory() . '/assets/js/script.js');
     wp_enqueue_script('main-script', get_template_directory_uri() . '/assets/js/script.js', array('jquery'), $script_ver, true);
@@ -393,12 +396,57 @@ function windmill_fix_local_assets($url) {
     if ( strpos($url, 'localhost') !== false && strpos($current_host, 'localhost') === false ) {
         $url = str_replace('localhost', $current_host, $url);
     }
+
+    // Fix Mixed Content: Force HTTPS if current request is HTTPS
+    // Also force HTTPS if the site is accessed via a domain name (production environment)
+    $is_production = strpos($current_host, 'localhost') === false && !preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/', $current_host);
+    
+    if ( is_ssl() || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') || $is_production ) {
+        if ( strpos($url, 'http://') === 0 ) {
+            $url = str_replace('http://', 'https://', $url);
+        }
+    }
     
     return $url;
 }
 add_filter('style_loader_src', 'windmill_fix_local_assets');
 add_filter('script_loader_src', 'windmill_fix_local_assets');
 add_filter('theme_file_uri', 'windmill_fix_local_assets');
+
+// --- Force HTTPS for all asset and site URLs (prevents mixed content on https domains) ---
+function windmill_force_https_urls($url) {
+    if (empty($url)) return $url;
+
+    // If request is https or current host looks like a domain (not localhost/IP), force https
+    $current_host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+    $is_production = $current_host && strpos($current_host, 'localhost') === false && !preg_match('/^\d{1,3}(\.\d{1,3}){3}$/', $current_host);
+
+    if (is_ssl() || $is_production) {
+        $url = preg_replace('#^http://#i', 'https://', $url);
+    }
+    return $url;
+}
+
+add_filter('content_url', 'windmill_force_https_urls');
+add_filter('plugins_url', 'windmill_force_https_urls');
+add_filter('includes_url', 'windmill_force_https_urls');
+add_filter('site_url', 'windmill_force_https_urls');
+add_filter('home_url', 'windmill_force_https_urls');
+add_filter('theme_file_uri', 'windmill_force_https_urls');
+add_filter('stylesheet_directory_uri', 'windmill_force_https_urls');
+add_filter('template_directory_uri', 'windmill_force_https_urls');
+add_filter('style_loader_src', 'windmill_force_https_urls');
+add_filter('script_loader_src', 'windmill_force_https_urls');
+
+// --- Strip accidental credential query strings like ?username=...&password=... ---
+function windmill_strip_credential_query() {
+    if (isset($_GET['username']) || isset($_GET['password'])) {
+        $clean_url = remove_query_arg(array('username', 'password'));
+        wp_safe_redirect($clean_url, 301);
+        exit;
+    }
+}
+add_action('template_redirect', 'windmill_strip_credential_query', 0);
 
 // --- Auto Create Pages on Theme Activation ---
 function windmill_auto_create_pages() {

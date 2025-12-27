@@ -22,16 +22,25 @@ $user_info = get_userdata($display_user_id);
 $display_name = $user_info ? $user_info->display_name : get_bloginfo('name');
 ?>
 
-<div class="container">
-    
-    <!-- 1. 头部 -->
-    <header class="header-section">
-        <!-- 头像区域 -->
-        <div class="avatar-container">
+<canvas id="particle-canvas"></canvas>
+
+<!-- Unified Header/Hero Wrapper -->
+<div class="header-hero-wrapper">
+    <div class="hero-content-layer">
+        <!-- Hero Avatar (Large) -->
+        <div class="avatar-container interactive-avatar hero-avatar">
             <img src="<?php echo esc_url($avatar_url); ?>" alt="Avatar" class="avatar-img">
         </div>
-        <h1 class="cursive-name"><?php echo esc_html($display_name); ?></h1>
-        <p class="site-intro"><?php echo esc_html($user_desc); ?></p>
+        <!-- Hero Name (Large) -->
+        <h1 class="hero-name" id="typewriter-text" data-text="<?php echo esc_attr($display_name); ?>"></h1>
+    </div>
+
+    <!-- Standard Header Content (Initially Hidden/Transparent) -->
+    <div class="standard-header-layer">
+        <div class="avatar-container header-avatar">
+            <img src="<?php echo esc_url($avatar_url); ?>" alt="Avatar" class="avatar-img">
+        </div>
+        <h1 class="cursive-name header-name"><?php echo esc_html($display_name); ?></h1>
         
         <!-- 社交链接区域 -->
         <div class="social-links">
@@ -53,8 +62,18 @@ $display_name = $user_info ? $user_info->display_name : get_bloginfo('name');
             }
             ?>
         </div>
-    </header>
 
+        <p class="site-intro"><?php echo esc_html($user_desc); ?></p>
+    </div>
+
+    <div class="scroll-indicator" onclick="window.scrollTo({top: window.innerHeight, behavior: 'smooth'});">
+        <svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
+    </div>
+</div>
+
+<div class="container main-content">
+    <!-- Content starts here, pushed down by CSS margin -->
+    
     <!-- 2. 座右铭 -->
     <div class="card motto-card">
         <div class="motto-text">“ <?php echo get_theme_mod('motto_text', '种一棵树最好的时间是十年前，其次是现在。'); ?> ”</div>

@@ -3,6 +3,17 @@
 <head>
     <meta charset="<?php bloginfo( 'charset' ); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <script>
+        // 立即执行主题检查，防止闪烁
+        (function() {
+            var savedTheme = localStorage.getItem('theme');
+            var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
     <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
@@ -19,7 +30,7 @@
             <p style="color: var(--text-light); margin-bottom: 20px;">请登录以继续访问</p>
             
             <!-- 登录表单 -->
-            <form class="login-form" id="login-form">
+            <form class="login-form" id="login-form" method="POST">
                 <input type="text" name="username" placeholder="用户名" required>
                 <input type="password" name="password" placeholder="密码" required>
                 <button type="submit" class="login-btn">登录</button>
@@ -30,7 +41,7 @@
             </form>
 
             <!-- 注册表单 (默认隐藏) -->
-            <form class="login-form hidden" id="register-form">
+            <form class="login-form hidden" id="register-form" method="POST">
                 <input type="text" name="username" placeholder="设置用户名" required>
                 <input type="email" name="email" placeholder="电子邮箱" required>
                 <input type="password" name="password" placeholder="设置密码" required>
@@ -52,7 +63,7 @@
             <p style="color: var(--text-light); margin-bottom: 20px;">请登录以继续访问</p>
             
             <!-- 登录表单 -->
-            <form class="login-form" id="login-form">
+            <form class="login-form" id="login-form" method="POST">
                 <input type="text" name="username" placeholder="用户名" required>
                 <input type="password" name="password" placeholder="密码" required>
                 <button type="submit" class="login-btn">登录</button>
@@ -63,7 +74,7 @@
             </form>
 
             <!-- 注册表单 (默认隐藏) -->
-            <form class="login-form hidden" id="register-form">
+            <form class="login-form hidden" id="register-form" method="POST">
                 <input type="text" name="username" placeholder="设置用户名" required>
                 <input type="email" name="email" placeholder="电子邮箱" required>
                 <input type="password" name="password" placeholder="设置密码" required>
@@ -120,7 +131,10 @@
     <!-- 自定义顶栏 -->
     <nav class="custom-navbar">
         <div class="nav-left">
-            <a href="<?php echo home_url(); ?>" class="nav-brand">🌸</a>
+            <a href="<?php echo home_url(); ?>" class="nav-brand">
+                <!-- SVG Logo (Flower) -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M4.93 19.07l1.41-1.41"/><path d="M17.66 6.34l1.41-1.41"/><circle cx="12" cy="12" r="3"/></svg>
+            </a>
             <ul class="nav-menu">
                 <li><a href="<?php echo home_url(); ?>" class="<?php echo is_front_page() ? 'active' : ''; ?>">首页</a></li>
                 <?php 
@@ -147,7 +161,9 @@
         <div class="nav-items" style="display: flex; align-items: center; gap: 15px;">
             
             <!-- Search Toggle -->
-            <button id="search-toggle" class="theme-toggle" aria-label="Search">🔍</button>
+            <button id="search-toggle" class="theme-toggle" aria-label="Search">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </button>
 
             <!-- User Avatar Dropdown -->
             <div class="user-menu-container">
@@ -182,7 +198,7 @@
 
             <!-- 主题切换按钮 (移入顶栏) -->
             <button class="theme-toggle" id="theme-toggle" aria-label="切换主题">
-                🌙
+                <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
             </button>
         </div>
     </nav>
